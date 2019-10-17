@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const ejsLayouts = require('express-ejs-layouts');
 const session = require('express-session');
+const passport = require('./config/ppConfig');
 
 const app = express();
 
@@ -13,10 +14,14 @@ app.use(express.static('public'));
 app.use(ejsLayouts);
 
 app.use(session({
-  secret: process.end.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }));
+
+// THIS MUST COME AFTER SESSION HAS BEEN SETUP!!
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', function(req, res) {
   res.render('index');
